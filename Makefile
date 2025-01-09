@@ -16,7 +16,7 @@ ZIP_NAME := Flutter_APP_V$(VERSION)($(BUILD_DATE)).zip
 # 기본 타겟
 .PHONY: all clean hash build-hash-maker build-dupdater build-flutter copy-updater create-zip
 
-all: build-hash-maker build-dupdater build-flutter copy-updater create-zip hash
+all: build-hash-maker build-dupdater build-flutter copy-updater hash create-zip
 
 # Hash-maker 빌드
 build-hash-maker:
