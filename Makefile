@@ -1,13 +1,17 @@
 # 기본 변수 설정
-ROOT_PATH := C:\update_test_for_flutter
+ROOT_PATH := C:/update_test_for_flutter
 PROJECT_PATH := $(ROOT_PATH)/simple_update_test
 HASH_MAKER_PATH := $(ROOT_PATH)/hash-maker
 DUPDATER_PATH := $(ROOT_PATH)/dupdater
 BUILD_DIR := $(PROJECT_PATH)/build/windows/x64/runner/Release/.
 
-# 날짜 시간 형식 설정 (PowerShell 사용)
-DATETIME := $(shell powershell -Command "Get-Date -Format 'yyyyMMdd_HHmmss'")
-ZIP_NAME := flutter_windows_build_$(DATETIME).zip
+# Version file path
+VERSION_FILE := $(PROJECT_PATH)/assets/version.json
+
+# ZIP 파일명에 버전 포함 (PowerShell 사용)
+VERSION := $(shell powershell -Command "Get-Content '$(VERSION_FILE)' | ConvertFrom-Json | Select -ExpandProperty version")
+BUILD_DATE := $(shell powershell -Command "Get-Content '$(VERSION_FILE)' | ConvertFrom-Json | Select -ExpandProperty buildDate")
+ZIP_NAME := Flutter_APP_V$(VERSION)($(BUILD_DATE)).zip
 
 # 기본 타겟
 .PHONY: all clean hash build-hash-maker build-dupdater build-flutter copy-updater create-zip
@@ -22,10 +26,12 @@ build-hash-maker:
 # Dupdater 빌드
 build-dupdater:
 	@echo "Building dupdater..."
-	cd $(DUPDATER_PATH) && go build -o dupdater.exe
+	cd $(DUPDATER_PATH)/cmd/dupdater && go build -o ../../dupdater.exe
 
 # Flutter 앱 빌드
 build-flutter:
+	@echo "Cleaning Flutter build..."
+	cd $(PROJECT_PATH) && flutter clean
 	@echo "Building Flutter Windows app..."
 	cd $(PROJECT_PATH) && flutter build windows --release
 
