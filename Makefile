@@ -51,6 +51,41 @@ hash:
 	@echo "Generating hash for build output..."
 	"$(HASH_MAKER_PATH)\hash-maker.exe" -startPath "$(BUILD_DIR)"
 
+# Hash-maker 업데이트를 위한 빠른 재빌드
+update-hash-maker: build-hash-maker
+	@echo "Checking if build directory exists..."
+	@if not exist "$(BUILD_DIR)" ( \
+		echo "Error: Build directory does not exist. Please run full build first." & \
+		exit 1 \
+	)
+	@echo "Creating new ZIP with updated hash-maker output..."
+	"$(HASH_MAKER_PATH)\hash-maker.exe" -zipfolder "$(BUILD_DIR)" -zipname "$(ZIP_NAME)" -zipoutput "$(PROJECT_PATH)"
+	"$(HASH_MAKER_PATH)\hash-maker.exe" -zip -zipPath "$(PROJECT_PATH)\$(ZIP_NAME)"
+	@echo "Update complete. New ZIP file created: $(ZIP_NAME)"
+
+# Flutter 앱 업데이트를 위한 빠른 재빌드
+update-flutter:
+	@echo "Building Flutter Windows app..."
+	cd $(PROJECT_PATH) && flutter build windows --release
+	@echo "Creating new ZIP with updated Flutter app..."
+	copy "$(DUPDATER_PATH)\dupdater.exe" "$(BUILD_DIR)"
+	"$(HASH_MAKER_PATH)\hash-maker.exe" -zipfolder "$(BUILD_DIR)" -zipname "$(ZIP_NAME)" -zipoutput "$(PROJECT_PATH)"
+	"$(HASH_MAKER_PATH)\hash-maker.exe" -zip -zipPath "$(PROJECT_PATH)\$(ZIP_NAME)"
+	@echo "Update complete. New ZIP file created: $(ZIP_NAME)"
+
+# dupdater 업데이트를 위한 빠른 재빌드
+update-dupdater: build-dupdater
+	@echo "Checking if build directory exists..."
+	@if not exist "$(BUILD_DIR)" ( \
+		echo "Error: Build directory does not exist. Please run full build first." & \
+		exit 1 \
+	)
+	@echo "Updating dupdater and creating new ZIP..."
+	copy "$(DUPDATER_PATH)\dupdater.exe" "$(BUILD_DIR)"
+	"$(HASH_MAKER_PATH)\hash-maker.exe" -zipfolder "$(BUILD_DIR)" -zipname "$(ZIP_NAME)" -zipoutput "$(PROJECT_PATH)"
+	"$(HASH_MAKER_PATH)\hash-maker.exe" -zip -zipPath "$(PROJECT_PATH)\$(ZIP_NAME)"
+	@echo "Update complete. New ZIP file created: $(ZIP_NAME)"
+
 # 정리
 clean:
 	@echo "Cleaning up..."
@@ -77,3 +112,8 @@ help:
 	@echo "  hash             - Generate hash for build output only"
 	@echo "  clean            - Clean up generated files"
 	@echo "  zip-with-name    - Create ZIP with specific name (use: make zip-with-name name=your_name)"
+	@echo ""
+	@echo "Quick update targets:"
+	@echo "  update-hash-maker - Update hash-maker and create new ZIP (requires existing build)"
+	@echo "  update-dupdater   - Update dupdater and create new ZIP (requires existing build)"
+	@echo "  update-flutter    - Update Flutter app and create new ZIP"
