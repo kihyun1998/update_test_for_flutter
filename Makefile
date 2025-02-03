@@ -1,5 +1,5 @@
 # 기본 변수 설정
-ROOT_PATH := C:/update_test_for_flutter
+ROOT_PATH := C:/Users/User/update_test_for_flutter
 PROJECT_PATH := $(ROOT_PATH)/simple_update_test
 HASH_MAKER_PATH := $(ROOT_PATH)/hash-maker
 DUPDATER_PATH := $(ROOT_PATH)/dupdater
@@ -32,6 +32,8 @@ build-dupdater:
 build-flutter:
 	@echo "Cleaning Flutter build..."
 	cd $(PROJECT_PATH) && flutter clean
+	@echo "Running build_runner..."
+	cd $(PROJECT_PATH) && flutter pub run build_runner build --delete-conflicting-outputs
 	@echo "Building Flutter Windows app..."
 	cd $(PROJECT_PATH) && flutter build windows --release
 
@@ -65,6 +67,8 @@ update-hash-maker: build-hash-maker
 
 # Flutter 앱 업데이트를 위한 빠른 재빌드
 update-flutter:
+	@echo "Running build_runner..."
+	cd $(PROJECT_PATH) && flutter pub run build_runner build --delete-conflicting-outputs
 	@echo "Building Flutter Windows app..."
 	cd $(PROJECT_PATH) && flutter build windows --release
 	@echo "Creating new ZIP with updated Flutter app..."
