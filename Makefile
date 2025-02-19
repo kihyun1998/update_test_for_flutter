@@ -46,7 +46,7 @@ copy-updater: build-dupdater
 create-zip:
 	@echo "Creating ZIP file..."
 	"$(HASH_MAKER_PATH)\hash-maker.exe" -zipfolder "$(BUILD_DIR)" -zipname "$(ZIP_NAME)" -zipoutput "$(PROJECT_PATH)"
-	"$(HASH_MAKER_PATH)\hash-maker.exe" -hash -zipPath "$(PROJECT_PATH)\$(ZIP_NAME)"
+	"$(HASH_MAKER_PATH)\hash-maker.exe" -zip -zipPath "$(PROJECT_PATH)\$(ZIP_NAME)"
 
 # 해시만 생성
 hash:
@@ -62,7 +62,7 @@ update-hash-maker: build-hash-maker
 	)
 	@echo "Creating new ZIP with updated hash-maker output..."
 	"$(HASH_MAKER_PATH)\hash-maker.exe" -zipfolder "$(BUILD_DIR)" -zipname "$(ZIP_NAME)" -zipoutput "$(PROJECT_PATH)"
-	"$(HASH_MAKER_PATH)\hash-maker.exe" -hash -zipPath "$(PROJECT_PATH)\$(ZIP_NAME)"
+	"$(HASH_MAKER_PATH)\hash-maker.exe" -zip -zipPath "$(PROJECT_PATH)\$(ZIP_NAME)"
 	@echo "Update complete. New ZIP file created: $(ZIP_NAME)"
 
 # Flutter 앱 업데이트를 위한 빠른 재빌드
@@ -74,7 +74,7 @@ update-flutter:
 	@echo "Creating new ZIP with updated Flutter app..."
 	copy "$(DUPDATER_PATH)\dupdater.exe" "$(BUILD_DIR)"
 	"$(HASH_MAKER_PATH)\hash-maker.exe" -zipfolder "$(BUILD_DIR)" -zipname "$(ZIP_NAME)" -zipoutput "$(PROJECT_PATH)"
-	"$(HASH_MAKER_PATH)\hash-maker.exe" -hash -zipPath "$(PROJECT_PATH)\$(ZIP_NAME)"
+	"$(HASH_MAKER_PATH)\hash-maker.exe" -zip -zipPath "$(PROJECT_PATH)\$(ZIP_NAME)"
 	@echo "Update complete. New ZIP file created: $(ZIP_NAME)"
 
 # dupdater 업데이트를 위한 빠른 재빌드
@@ -87,7 +87,7 @@ update-dupdater: build-dupdater
 	@echo "Updating dupdater and creating new ZIP..."
 	copy "$(DUPDATER_PATH)\dupdater.exe" "$(BUILD_DIR)"
 	"$(HASH_MAKER_PATH)\hash-maker.exe" -zipfolder "$(BUILD_DIR)" -zipname "$(ZIP_NAME)" -zipoutput "$(PROJECT_PATH)"
-	"$(HASH_MAKER_PATH)\hash-maker.exe" -hash -zipPath "$(PROJECT_PATH)\$(ZIP_NAME)"
+	"$(HASH_MAKER_PATH)\hash-maker.exe" -zip -zipPath "$(PROJECT_PATH)\$(ZIP_NAME)"
 	@echo "Update complete. New ZIP file created: $(ZIP_NAME)"
 
 # 정리
@@ -101,7 +101,7 @@ zip-with-name:
 ifdef name
 	@echo "Creating ZIP file with name: $(name).zip"
 	"$(HASH_MAKER_PATH)\hash-maker.exe" -zipfolder "$(BUILD_DIR)" -zipname "$(name).zip" -zipoutput "$(PROJECT_PATH)"
-	"$(HASH_MAKER_PATH)\hash-maker.exe" -hash -zipPath "$(PROJECT_PATH)\$(name).zip"
+	"$(HASH_MAKER_PATH)\hash-maker.exe" -zip -zipPath "$(PROJECT_PATH)\$(name).zip"
 else
 	@echo "Please provide a name parameter: make zip-with-name name=your_name"
 endif
